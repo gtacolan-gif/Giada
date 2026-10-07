@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Giada info</title>
+  <link rel="icon" type="image/png" href="Giada.png?v=2">
+  <link rel="apple-touch-icon" href="Giada.png?v=2">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* Altezza della barra superiore (usata anche per far partire lo sfondo sotto di essa) */
+    :root {
+      --barra: 88px;
+      /* ▼▼▼ CAMBIA QUI il nome/percorso della tua immagine di sfondo ▼▼▼ */
+      --sfondo: url("Sfondog.png");
+      /* Colore di riserva: viene sostituito in automatico dal colore della parte bassa dell'immagine (vedi script in fondo) */
+      --colore-fondo: #5a1226;
+
+      /* ▼ COLORI (uguali alla pagina index) ▼ */
+      --oro: #C9A15A;                        /* cornici e filetti */
+      --oro-chiaro: #E3C380;                 /* oro per frecce, link e dettagli: si legge bene sul bordeaux */
+      /* Bordeaux con riflesso diagonale, sempre trasparente (0.75 = 25% di trasparenza) */
+      --pannello: linear-gradient(135deg,
+                    rgba(122, 20, 48, 0.75) 0%,
+                    rgba(100, 14, 36, 0.75) 45%,
+                    rgba(74, 8, 26, 0.75) 100%);
+      --testo: #F6EBD6;                      /* avorio caldo: testi leggibili sul bordeaux */
+    }
+
+    /* Questo colore riempie tutto lo schermo, anche sotto la barra del browser del telefono */
+    html { background-color: var(--colore-fondo); }
+
+    /* Immagine di sfondo: parte SOTTO la barra e in basso sfuma nel suo stesso colore */
+    body::before {
+      content: "";
+      position: fixed;
+      top: var(--barra);
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: -1;
+      background:
+        linear-gradient(to bottom, transparent calc(100% - 180px), var(--colore-fondo) 100%),
+        var(--sfondo) center / cover no-repeat;
+    }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--testo);
+      min-height: 100vh;
+      padding: calc(var(--barra) + 24px) 20px 40px;
+    }
+
+    /* ===== BARRA SUPERIORE ===== */
+    .barra {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      height: var(--barra);
+      padding: 0 20px;
+      background: var(--pannello);
+      border-bottom: 1px solid rgba(201, 161, 90, 0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      box-shadow: 0 2px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    .barra img {
+      height: 90px;
+      width: 90px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .barra h1 {
+      font-family: "Cinzel", "Trajan Pro", Georgia, "Times New Roman", serif;
+      font-size: 2.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      line-height: 1.1;
+      white-space: nowrap;
+      color: #D9B26A; /* oro di riserva */
+      /* effetto oro metallico in rilievo */
+      background: linear-gradient(180deg, #F3DDA6 0%, #D4AB5E 45%, #A57C34 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.55));
+    }
+
+    /* Freccia "indietro" a sinistra nella barra */
+    .indietro {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: var(--oro-chiaro);
+      background: rgba(255, 255, 255, 0.12);
+      transition: background 0.2s;
+    }
+
+    .indietro svg { width: 26px; height: 26px; display: block; }
+
+    .indietro:hover,
+    .indietro:focus-visible {
+      background: rgba(255, 255, 255, 0.25);
+      outline: 2px solid var(--oro-chiaro);
+      outline-offset: 1px;
+    }
+
+    .marchio {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ===== CONTENUTO ===== */
+    main {
+      width: 100%;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    /* Link recensioni */
+    .recensione {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: fit-content;
+      max-width: 100%;
+      margin: 0 auto 18px;
+      padding: 10px 24px;
+      background: var(--pannello);
+      border: 1px solid rgba(201, 161, 90, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 999px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+      color: var(--testo);
+      text-decoration: none;
+      font-size: 1.25rem;
+      transition: filter 0.2s;
+    }
+
+    .recensione:hover,
+    .recensione:focus-visible {
+      filter: brightness(1.35);
+      outline: 2px solid var(--oro-chiaro);
+      outline-offset: 2px;
+    }
+
+    .recensione svg { flex: 0 0 auto; width: 30px; height: 30px; display: block; }
+
+    /* Riquadro centrale */
+    .riquadro {
+      background: var(--pannello);
+      border: 1px solid rgba(201, 161, 90, 0.5);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 14px;
+      padding: 10px 28px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    /* ===== ELENCO A FISARMONICA ===== */
+    .voce { border-bottom: 1px solid rgba(201, 161, 90, 0.5); }
+    .voce:last-child { border-bottom: none; }
+
+    .voce-titolo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      padding: 18px 8px;
+      background: none;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 1.6rem;
+      text-align: left;
+      color: var(--testo);
+    }
+
+    .voce-titolo:hover { background: rgba(255, 255, 255, 0.1); }
+    .voce-titolo:focus-visible { outline: 2px solid var(--oro-chiaro); outline-offset: -2px; }
+
+    /* Freccia: punta verso la scritta (destra) e ruota in senso orario fino a puntare in basso */
+    .freccia {
+      flex: 0 0 auto;
+      width: 26px;
+      height: 26px;
+      color: var(--oro-chiaro);
+      transition: transform 0.35s ease;
+    }
+
+    .voce-titolo[aria-expanded="true"] .freccia { transform: rotate(90deg); }
+
+    /* Pannello che si apre */
+    .pannello {
+      display: grid;
+      grid-template-rows: 0fr;
+      visibility: hidden;
+      transition: grid-template-rows 0.35s ease, visibility 0s linear 0.35s;
+    }
+
+    .pannello.aperto {
+      grid-template-rows: 1fr;
+      visibility: visible;
+      transition: grid-template-rows 0.35s ease, visibility 0s;
+    }
+
+    .pannello-interno { overflow: hidden; }
+
+    .contenuto { padding: 4px 8px 22px 50px; }
+
+    .contenuto p { font-size: 1.1rem; line-height: 1.65; margin-bottom: 12px; }
+    .contenuto p:last-child { margin-bottom: 0; }
+
+    .contenuto ul { margin: 0 0 12px 20px; font-size: 1.1rem; line-height: 1.65; }
+    .contenuto li { margin-bottom: 6px; }
+
+    /* Elenco con distanze (sezione Tour): una scheda per ogni luogo */
+    .contenuto ul.tappe { list-style: none; margin: 8px 0 18px; padding: 0; }
+
+    .tappe li {
+      margin: 0 0 10px;
+      padding: 12px 16px 14px;
+      background: rgba(0, 0, 0, 0.22);
+      border: 2px solid var(--oro);
+      border-radius: 8px;
+      font-size: 1.02rem;
+      line-height: 1.55;
+    }
+
+    .tappe li:last-child { margin-bottom: 0; }
+
+    .tappe strong {
+      display: block;
+      font-size: 1.2rem;
+      line-height: 1.3;
+      color: var(--testo);
+    }
+
+    .dist {
+      display: block;
+      width: fit-content;
+      margin: 6px 0 8px;
+      padding: 2px 12px;
+      border-radius: 999px;
+      background: rgba(201, 161, 90, 0.22);
+      color: var(--oro-chiaro);
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    .credenziali a { color: var(--oro-chiaro); }
+
+    /* Nota sotto lo username del Wi-Fi */
+    .credenziali .nota {
+      display: block;
+      margin: 0 0 6px;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      opacity: 0.85;
+    }
+
+    .credenziali {
+      background: rgba(0, 0, 0, 0.22);
+      border: 2px solid var(--oro);
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin: 4px 0 14px;
+      font-size: 1.15rem;
+      line-height: 1.8;
+    }
+
+    /* ===== SPAZI PER LE IMMAGINI ===== */
+    .foto-griglia {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .foto-griglia.una { grid-template-columns: 1fr; }
+
+    .foto {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.22);
+      border: 2px solid var(--oro);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--oro-chiaro);
+      padding: 8px;
+    }
+
+    .foto::before { content: "Inserisci qui l'immagine"; }
+
+    .una .foto { aspect-ratio: 16 / 9; }
+
+    .foto img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Immagine cliccabile */
+    .foto a {
+      position: absolute;
+      inset: 0;
+      display: block;
+      cursor: pointer;
+    }
+
+    .foto a:focus-visible { outline: 3px solid var(--oro-chiaro); outline-offset: -3px; }
+
+    /* ===== TELEFONO ===== */
+    @media (max-width: 480px) {
+      :root { --barra: 64px; }
+      body { padding: calc(var(--barra) + 16px) 12px 28px; }
+      .barra { gap: 10px; padding: 0 12px; }
+      .marchio { gap: 10px; }
+      .barra img { height: 54px; width: 54px; }
+      .barra h1 { font-size: 0.95rem; letter-spacing: 0.04em; }
+      .indietro { left: 6px; width: 34px; height: 34px; }
+      .indietro svg { width: 22px; height: 22px; }
+      .recensione { font-size: 1.05rem; padding: 10px 18px; gap: 10px; }
+      .riquadro { padding: 6px 14px; }
+      .voce-titolo { font-size: 1.35rem; padding: 16px 4px; gap: 12px; }
+      .contenuto { padding: 2px 4px 20px 4px; }
+      .tappe li { padding: 10px 12px 12px; }
+      .tappe strong { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="barra">
+    <a class="indietro" href="index.html" aria-label="Torna alla scelta della lingua">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+
+    <a class="marchio" href="index.html" aria-label="Torna alla pagina iniziale">
+      <img src="Giada.png" alt="Logo Hotel Giada Roma">
+      <h1>Hotel Giada</h1>
+    </a>
+  </header>
+
+  <main>
+
+    <a class="recensione" href="https://www.tripadvisor.it/UserReviewEdit-g187791-d232877-Hotel_Giada-Rome_Lazio.html" target="_blank" rel="noopener">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <circle cx="24" cy="24" r="24" fill="#34E0A1"/>
+        <path d="M6 25 Q9 17.5 16 17 M42 25 Q39 17.5 32 17" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="16" cy="26" r="8.6" fill="#000"/>
+        <circle cx="16" cy="26" r="6.3" fill="#fff"/>
+        <circle cx="16" cy="26" r="3.3" fill="#000"/>
+        <circle cx="32" cy="26" r="8.6" fill="#000"/>
+        <circle cx="32" cy="26" r="6.3" fill="#fff"/>
+        <circle cx="32" cy="26" r="3.3" fill="#000"/>
+        <path d="M24 28.5 L21 32.5 L27 32.5 Z" fill="#000" stroke="#000" stroke-width="1.2" stroke-linejoin="round"/>
+      </svg>
+      <span>La tua opinione è importante per noi</span>
+    </a>
+    <a class="recensione" href="https://g.page/r/CVASRxmmOiVcEBM/review" target="_blank" rel="noopener">
+      <svg viewBox="0 0 48 48" aria-hidden="true">
+        <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.5l6.8-6.8C35.5 2.1 30.1 0 24 0 14.6 0 6.5 5.4 2.3 13.3l7.9 6.2C12 13.7 17.6 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M47.5 24.5c0-1.6-.1-3.2-.4-4.7H24v9h13.2c-.6 3-2.3 5.5-4.8 7.2l7.6 5.9c4.5-4.1 7.5-10.4 7.5-17.4z"/>
+        <path fill="#FBBC05" d="M10.2 28.5c-.5-1.5-.8-3.1-.8-4.7s.3-3.2.8-4.7l-7.9-6.2C1.1 16.2 0 19.9 0 24s1.1 7.8 2.3 11.1l7.9-6.6z"/>
+        <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.6-5.9c-2.2 1.5-5 2.3-8.3 2.3-6.4 0-11.9-4.2-13.9-9.9l-7.9 6.2C6.5 42.6 14.6 48 24 48z"/>
+      </svg>
+      <span>Lascia una recensione su Google</span>
+    </a>
+
+    <div class="riquadro">
+
+      <!-- ===== WI-FI ===== -->
+      <section class="voce">
+        <button class="voce-titolo" aria-expanded="false" aria-controls="p-wifi">
+          <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Wi-Fi
+        </button>
+        <div class="pannello" id="p-wifi">
+          <div class="pannello-interno">
+            <div class="contenuto">
+              <p>Per collegarvi alla rete Wi-Fi dell'hotel, selezionate la rete e inserite le seguenti credenziali:</p>
+              <div class="credenziali">
+                <strong>Username:</strong> Altavilla <small class="nota">(tutti gli wi-fi hanno la stessa password)</small>
+                <strong>Password:</strong> 91938163
+              </div>
+              <p>Per qualsiasi difficoltà di connessione, il personale della reception sarà lieto di aiutarvi.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== INFORMAZIONI ===== -->
+      <section class="voce">
+        <button class="voce-titolo" aria-expanded="false" aria-controls="p-informazioni">
+          <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Informazioni
+        </button>
+        <div class="pannello" id="p-informazioni">
+          <div class="pannello-interno">
+            <div class="contenuto">
+              <p>La nostra struttura è aperta 24 ore su 24, 7 giorni su 7, per accogliervi in qualsiasi momento della giornata.</p>
+              <p>All'occorrenza provvediamo al cambio della biancheria e ogni giorno provvediamo al rifornimento di saponi e carta igienica, per garantirvi sempre un soggiorno confortevole.</p>
+              <p>Vi ricordiamo che, ogni volta che uscite dalla struttura, è obbligatorio lasciare le vostre chiavi in reception.</p>
+              <div class="foto-griglia una">
+                <div class="foto"><img src="Reception.jpg" alt="Informazioni" onerror="this.remove()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== COLAZIONE ===== -->
+      <section class="voce">
+        <button class="voce-titolo" aria-expanded="false" aria-controls="p-colazione">
+          <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Colazione
+        </button>
+        <div class="pannello" id="p-colazione">
+          <div class="pannello-interno">
+            <div class="contenuto">
+              <p>Offriamo una ricca colazione, servita dalle 8:00 alle 10:00.</p>
+              <p>Se non è inclusa nella vostra tariffa, il costo è di 7,50 € a persona. Per il pagamento vi invitiamo a rivolgervi alla reception.</p>
+              <div class="foto-griglia una">
+                <div class="foto"><img src="Colazione.jpg" alt="Colazione" onerror="this.remove()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TOUR ===== -->
+      <section class="voce">
+        <button class="voce-titolo" aria-expanded="false" aria-controls="p-tour">
+          <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Tour
+        </button>
+        <div class="pannello" id="p-tour">
+          <div class="pannello-interno">
+            <div class="contenuto">
+              <p>Desiderate scoprire la città? Dalla nostra reception possiamo prenotare per voi tutte le esperienze che volete effettuare. L'hotel si trova in Via Principe Amedeo 9, a circa 0,3 km dalla stazione Termini (5 minuti a piedi). Ecco le principali esperienze disponibili con MP Tour, con indicazioni e distanza a piedi dall'hotel:</p>
+              <ul class="tappe">
+                <li>
+                  <strong>Colosseo, Foro Romano e Palatino</strong>
+                  <span class="dist">1,6 km · 20 min a piedi</span>
+                  Raggiungete Via Cavour e seguitela fino a Via dei Fori Imperiali: da lì il Foro Romano e il Colosseo sono ben visibili. Tour guidati, con audioguida o con ingresso rapido.
+                </li>
+                <li>
+                  <strong>Fontana di Trevi</strong>
+                  <span class="dist">1,4 km · 17 min a piedi</span>
+                  Scendete lungo Via Nazionale verso Piazza Venezia e seguite le indicazioni per la fontana. Disponibili la visita con tour a piedi e il tour dei sotterranei.
+                </li>
+                <li>
+                  <strong>Pantheon</strong>
+                  <span class="dist">2 km · 25 min a piedi</span>
+                  Passate dalla Fontana di Trevi e proseguite per altri 0,6 km circa verso Via del Corso e il Pantheon.
+                </li>
+                <li>
+                  <strong>Piazza Navona Underground</strong>
+                  <span class="dist">2,3 km · 28 min a piedi</span>
+                  Dal Pantheon proseguite per circa 0,3 km fino a Piazza Navona.
+                </li>
+                <li>
+                  <strong>Castel Sant'Angelo</strong>
+                  <span class="dist">3,2 km · 40 min a piedi</span>
+                  Da Piazza Navona proseguite verso il Tevere e Ponte Sant'Angelo. In alternativa potete usare i mezzi pubblici da Termini.
+                </li>
+                <li>
+                  <strong>Vaticano</strong> (Musei Vaticani, Basilica e Cupola di San Pietro, Giardini)
+                  <span class="dist">4,5 km · 55 min a piedi</span>
+                  Vi consigliamo la metro A da Termini (a circa 0,3 km dall'hotel) in direzione Battistini, fermata Ottaviano: da lì servono circa 10 minuti a piedi.
+                </li>
+                <li>
+                  <strong>Musei Capitolini</strong>
+                  <span class="dist">2 km · 25 min a piedi</span>
+                  Scendete lungo Via Nazionale fino a Piazza Venezia e salite la Cordonata verso Piazza del Campidoglio.
+                </li>
+                <li>
+                  <strong>Galleria Borghese</strong>
+                  <span class="dist">2,5 km · 30 min a piedi</span>
+                  Dirigetevi verso Via Veneto e salitela fino a Porta Pinciana, poi entrate a Villa Borghese: la Galleria si trova nel parco.
+                </li>
+                <li>
+                  <strong>Hop on Hop off, golf cart, tour a piedi e Food &amp; Wine</strong>
+                  <span class="dist">0,3 km · 4 min a piedi</span>
+                  La reception vi indicherà il punto di ritrovo per tutte le esperienze da voi selezionate.
+                </li>
+              </ul>
+              <p>Le distanze sono indicative e calcolate a partire dall'hotel. Per orari, durata e disponibilità vi invitiamo a rivolgervi alla reception.</p>
+              <div class="foto-griglia una">
+                <div class="foto"><img src="Tour2.jpg" alt="Tour" onerror="this.remove()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CHECK-OUT ===== -->
+      <section class="voce">
+        <button class="voce-titolo" aria-expanded="false" aria-controls="p-checkout">
+          <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Check-out
+        </button>
+        <div class="pannello" id="p-checkout">
+          <div class="pannello-interno">
+            <div class="contenuto">
+              <p>Il check-out deve essere effettuato obbligatoriamente entro le ore 11:00.</p>
+              <p>Vi invitiamo a presentarvi in reception per consegnare la chiave e salutarci. Se la vostra partenza è prevista più tardi, potete lasciare i bagagli in deposito (vedere la sezione Bagagli).</p>
+              <div class="foto-griglia una">
+                <div class="foto"><img src="Checkout.jpg" alt="Check-out" onerror="this.remove()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== BAGAGLI ===== -->
+      <section class="voce">
+        <button class="voce-titolo" aria-expanded="false" aria-controls="p-bagagli">
+          <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Bagagli
+        </button>
+        <div class="pannello" id="p-bagagli">
+          <div class="pannello-interno">
+            <div class="contenuto">
+              <p>Mettiamo a vostra disposizione uno spazio dove conservare i bagagli prima del check-in o dopo il check-out. Sono disponibili due opzioni di deposito:</p>
+              <ul>
+                <li><strong>Gratuito</strong>, ma non sorvegliato.</li>
+                <li><strong>A pagamento</strong>, sorvegliato e custodito, al prezzo di 5 € a persona.</li>
+              </ul>
+              <div class="foto-griglia una">
+                <div class="foto"><img src="Bagagli.jpg" alt="Deposito bagagli" onerror="this.remove()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== TAXI ===== -->
+      <section class="voce">
+        <button class="voce-titolo" aria-expanded="false" aria-controls="p-taxi">
+          <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Taxi
+        </button>
+        <div class="pannello" id="p-taxi">
+          <div class="pannello-interno">
+            <div class="contenuto">
+              <p>All'occorrenza possiamo chiamare un taxi per voi, per qualsiasi zona di Roma desideriate visitare, senza alcun sovrapprezzo.</p>
+              <p>Vi basta rivolgervi alla reception.</p>
+              <div class="foto-griglia una">
+                <div class="foto"><img src="Taxi.jpg" alt="Taxi" onerror="this.remove()"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CONTATTI ===== -->
+      <section class="voce">
+        <button class="voce-titolo" aria-expanded="false" aria-controls="p-contatti">
+          <svg class="freccia" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Contatti
+        </button>
+        <div class="pannello" id="p-contatti">
+          <div class="pannello-interno">
+            <div class="contenuto">
+              <p>Per qualsiasi informazione o richiesta, siamo a vostra disposizione:</p>
+              <div class="credenziali">
+                <strong>Telefono:</strong> <a href="tel:+390647825568">+39 06 47825 568</a><br>
+                <strong>E-mail:</strong> <a href="mailto:info@hotelgiadaroma.it">info@hotelgiadaroma.it</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    document.querySelectorAll('.voce-titolo').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var aperto = btn.getAttribute('aria-expanded') === 'true';
+
+        // Chiude tutte le altre sezioni aperte
+        document.querySelectorAll('.voce-titolo').forEach(function (altroBtn) {
+          if (altroBtn !== btn) {
+            altroBtn.setAttribute('aria-expanded', 'false');
+            document.getElementById(altroBtn.getAttribute('aria-controls')).classList.remove('aperto');
+          }
+        });
+
+        // Apre o chiude la sezione su cui abbiamo cliccato
+        btn.setAttribute('aria-expanded', String(!aperto));
+        document.getElementById(btn.getAttribute('aria-controls')).classList.toggle('aperto', !aperto);
+      });
+    });
+  </script>
+
+  <script>
+    (function () {
+      var m = getComputedStyle(document.documentElement).getPropertyValue('--sfondo').match(/url\(["']?(.*?)["']?\)/);
+      if (!m) return;
+      var img = new Image();
+      img.onload = function () {
+        try {
+          var n = 8, c = document.createElement('canvas');
+          c.width = c.height = n;
+          var x = c.getContext('2d');
+          x.drawImage(img, 0, img.height * 0.9, img.width, img.height * 0.1, 0, 0, n, n);
+          var d = x.getImageData(0, 0, n, n).data, r = 0, g = 0, b = 0, k = n * n;
+          for (var i = 0; i < d.length; i += 4) { r += d[i]; g += d[i + 1]; b += d[i + 2]; }
+          document.documentElement.style.setProperty('--colore-fondo',
+            'rgb(' + Math.round(r / k) + ',' + Math.round(g / k) + ',' + Math.round(b / k) + ')');
+        } catch (e) { }
+      };
+      img.src = m[1];
+    })();
+  </script>
+
+</body>
+</html>
